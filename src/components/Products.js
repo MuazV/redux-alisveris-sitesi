@@ -1,8 +1,9 @@
 import React from "react";
-import {connect} from 'react-redux';
+import { connect } from "react-redux";
+import { sepeteEkle } from "../actions/index";
 import { Link } from "react-router-dom";
 
-const Products = props => {
+const Products = (props) => {
   console.log(props.bookList);
   return (
     <div>
@@ -10,26 +11,28 @@ const Products = props => {
         <span>Kitap Listesi</span>
         <Link to="/cart">Sepetim</Link>
       </h2>
-      <div className="book">
-        <img
-          src="https://images-na.ssl-images-amazon.com/images/I/51eqjXwFzwL._SX344_BO1,204,203,200_.jpg"
-          alt="Simyaci"
-        />
-        <div>
-          <h4>Simyaci</h4>
-          <p>Yazar: Paulo Coelho</p>
-          <p>Fiyat: &#8378; 19.99</p>
-          <button>Sepete Ekle</button>
+      {props.bookList.map((book) => (
+        <div className="book">
+          <img src={book.image} alt={book.name} />
+          <div>
+            <h4>{book.name}</h4>
+            <p>Yazar: {book.author}</p>
+            <p>Fiyat: &#8378; {book.price}</p>
+            <button onClick={() => props.sepeteEkle(book)}>Sepete Ekle</button>
+          </div>
         </div>
-      </div>
+      ))}
     </div>
   );
 };
 
-const MapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    bookList: state.bookList
+    bookList: state.bookList,
+    cart:state.cart
   };
 };
 
-export default connect(MapStateToProps)(Products);
+const mapActionToProps = () => ({ sepeteEkle });
+
+export default connect(mapStateToProps, mapActionToProps)(Products);
